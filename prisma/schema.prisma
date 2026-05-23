@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  nombre    String
+  rol       String   @default("VOLUNTARIO") // ENCARGADO | VOLUNTARIO
+  createdAt DateTime @default(now())
+
+  programaEncargado   Programa?            @relation("ProgramaEncargado")
+  programasVoluntario VoluntarioPrograma[]
+  tareasAsignadas     Tarea[]              @relation("TareaVoluntario")
+  tareasCreadas       Tarea[]              @relation("TareaEncargado")
+}
+
+model Programa {
+  id          Int                  @id @default(autoincrement())
+  nombre      String
+  descripcion String?
+  encargadoId Int                  @unique
+  encargado   Usuario              @relation("ProgramaEncargado", fields: [encargadoId], references: [id])
+  voluntarios VoluntarioPrograma[]
+  tareas      Tarea[]
+  createdAt   DateTime             @default(now())
+}
+
+model VoluntarioPrograma {
+  id           Int      @id @default(autoincrement())
+  voluntarioId Int
+  programaId   Int
+  voluntario   Usuario  @relation(fields: [voluntarioId], references: [id])
+  programa     Programa @relation(fields: [programaId], references: [id])
+
+  @@unique([voluntarioId, programaId])
+}
+
+model Tarea {
+  id           Int      @id @default(autoincrement())
+  descripcion  String
+  fechaLimite  DateTime
+  estado       String   @default("PENDIENTE") // PENDIENTE | COMPLETADA | APROBADA | RECHAZADA
+  programaId   Int
+  programa     Programa @relation(fields: [programaId], references: [id])
+  voluntarioId Int
+  voluntario   Usuario  @relation("TareaVoluntario", fields: [voluntarioId], references: [id])
+  encargadoId  Int
+  encargado    Usuario  @relation("TareaEncargado", fields: [encargadoId], references: [id])
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}

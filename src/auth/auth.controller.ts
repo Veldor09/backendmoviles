@@ -1,4 +1,5 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Put, Body, Request, UseGuards } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 
@@ -9,5 +10,11 @@ export class AuthController {
   @Post('login')
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Put('fcm-token')
+  @UseGuards(AuthGuard('jwt'))
+  saveFcmToken(@Request() req, @Body('token') token: string) {
+    return this.authService.saveFcmToken(req.user.id, token);
   }
 }

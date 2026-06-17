@@ -24,4 +24,11 @@ export class AuthService {
       user: { id: user.id, email: user.email, nombre: user.nombre, rol: user.rol },
     };
   }
+
+  async saveFcmToken(userId: number, token: string) {
+    await this.prisma.usuario.update({
+      where: { id: userId },
+      data: { fcmToken: token },
+    });
+  }
 }

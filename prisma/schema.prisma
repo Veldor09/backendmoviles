@@ -13,6 +13,7 @@ model Usuario {
   password  String
   nombre    String
   rol       String   @default("VOLUNTARIO") // ENCARGADO | VOLUNTARIO
+  fcmToken  String?
   createdAt DateTime @default(now())
 
   programaEncargado   Programa?            @relation("ProgramaEncargado")

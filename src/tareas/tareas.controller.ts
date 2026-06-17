@@ -26,6 +26,12 @@ export class TareasController {
     return this.service.getTareasCompletadas(req.user.id);
   }
 
+  @Get('del-programa')
+  getTareasDelPrograma(@Request() req) {
+    if (req.user.rol !== 'ENCARGADO') throw new ForbiddenException('Solo encargados');
+    return this.service.getTareasDelPrograma(req.user.id);
+  }
+
   @Put(':id')
   marcarCompletada(@Param('id', ParseIntPipe) id: number, @Request() req) {
     return this.service.marcarCompletada(id, req.user.id);

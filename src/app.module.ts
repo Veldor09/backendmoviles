@@ -5,11 +5,13 @@ import { ProgramasModule } from './programas/programas.module';
 import { TareasModule } from './tareas/tareas.module';
 import { VoluntariosModule } from './voluntarios/voluntarios.module';
 import { UsersModule } from './users/users.module';
+import { NotificationModule } from './notifications/notification.module';
 import { PrismaService } from './prisma.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    NotificationModule,
     AuthModule,
     UsersModule,
     ProgramasModule,

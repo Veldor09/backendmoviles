@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: fundecodes_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: fundecodes
+      POSTGRES_PASSWORD: fundecodes123
+      POSTGRES_DB: fundecodes_db
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:

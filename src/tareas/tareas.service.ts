@@ -20,6 +20,7 @@ export class TareasService {
   async crear(dto: CreateTareaDto, encargadoId: number) {
     const tarea = await this.prisma.tarea.create({
       data: {
+        titulo: dto.titulo,
         descripcion: dto.descripcion,
         fechaLimite: new Date(dto.fechaLimite),
         voluntarioId: dto.voluntarioId,
@@ -30,7 +31,7 @@ export class TareasService {
     });
     const token = (tarea.voluntario as any).fcmToken;
     if (token) {
-      await this.notifications.send(token, '📋 Nueva tarea asignada', tarea.descripcion);
+      await this.notifications.send(token, `📋 ${tarea.titulo}`, tarea.descripcion);
     }
     return tarea;
   }
@@ -96,13 +97,14 @@ export class TareasService {
 
     const updated = await this.prisma.tarea.update({
       where: { id },
-      data: { estado: dto.estado },
+      data: { estado: dto.estado, comentario: dto.comentario ?? null },
       include: tareaInclude,
     });
     const token = (tarea.voluntario as any).fcmToken;
     if (token) {
       const titulo = dto.estado === 'APROBADA' ? '🎉 Tarea aprobada' : '❌ Tarea rechazada';
-      await this.notifications.send(token, titulo, tarea.descripcion);
+      const body = dto.comentario ? `${tarea.descripcion} — ${dto.comentario}` : tarea.descripcion;
+      await this.notifications.send(token, titulo, body);
     }
     return updated;
   }

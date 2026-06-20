@@ -4,3 +4,4 @@ dist/
 *.db-journal
 prisma/migrations/
 .env
+.env.local

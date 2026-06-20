@@ -12,7 +12,7 @@ model Usuario {
   email     String   @unique
   password  String
   nombre    String
-  rol       String   @default("VOLUNTARIO") // ENCARGADO | VOLUNTARIO
+  rol       String   @default("VOLUNTARIO") // ADMIN | ENCARGADO | VOLUNTARIO
   fcmToken  String?
   createdAt DateTime @default(now())
 
@@ -47,7 +47,9 @@ model Tarea {
   id           Int      @id @default(autoincrement())
   descripcion  String
   fechaLimite  DateTime
+  titulo       String   @default("")
   estado       String   @default("PENDIENTE") // PENDIENTE | COMPLETADA | APROBADA | RECHAZADA
+  comentario   String?
   programaId   Int
   programa     Programa @relation(fields: [programaId], references: [id])
   voluntarioId Int

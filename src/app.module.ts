@@ -6,6 +6,7 @@ import { TareasModule } from './tareas/tareas.module';
 import { VoluntariosModule } from './voluntarios/voluntarios.module';
 import { UsersModule } from './users/users.module';
 import { NotificationModule } from './notifications/notification.module';
+import { AdminModule } from './admin/admin.module';
 import { PrismaService } from './prisma.service';
 
 @Module({
@@ -17,6 +18,7 @@ import { PrismaService } from './prisma.service';
     ProgramasModule,
     TareasModule,
     VoluntariosModule,
+    AdminModule,
   ],
   providers: [PrismaService],
 })

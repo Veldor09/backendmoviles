@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards, Request } from '@nestjs/common';
+import { Controller, Delete, ForbiddenException, Get, Param, ParseIntPipe, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ProgramasService } from './programas.service';
 
@@ -10,5 +10,23 @@ export class ProgramasController {
   @Get('mi-programa')
   getMiPrograma(@Request() req) {
     return this.service.getMiPrograma(req.user.id, req.user.rol);
+  }
+
+  @Get('voluntarios-disponibles')
+  getVoluntariosDisponibles(@Request() req) {
+    if (req.user.rol !== 'ENCARGADO') throw new ForbiddenException('Solo encargados');
+    return this.service.getVoluntariosDisponibles(req.user.id);
+  }
+
+  @Post('voluntarios/:voluntarioId')
+  agregarVoluntario(@Request() req, @Param('voluntarioId', ParseIntPipe) voluntarioId: number) {
+    if (req.user.rol !== 'ENCARGADO') throw new ForbiddenException('Solo encargados');
+    return this.service.agregarVoluntario(req.user.id, voluntarioId);
+  }
+
+  @Delete('voluntarios/:voluntarioId')
+  quitarVoluntario(@Request() req, @Param('voluntarioId', ParseIntPipe) voluntarioId: number) {
+    if (req.user.rol !== 'ENCARGADO') throw new ForbiddenException('Solo encargados');
+    return this.service.quitarVoluntario(req.user.id, voluntarioId);
   }
 }

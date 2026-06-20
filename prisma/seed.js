@@ -6,6 +6,17 @@ const prisma = new PrismaClient();
 async function main() {
   const hash = (pwd) => bcrypt.hashSync(pwd, 10);
 
+  await prisma.usuario.upsert({
+    where: { email: 'admin@fundecodes.org' },
+    update: {},
+    create: {
+      email: 'admin@fundecodes.org',
+      password: hash('admin123'),
+      nombre: 'Administrador FUNDECODES',
+      rol: 'ADMIN',
+    },
+  });
+
   const encargado = await prisma.usuario.upsert({
     where: { email: 'encargado@fundecodes.org' },
     update: {},
@@ -82,6 +93,7 @@ async function main() {
   }
 
   console.log('✅ Seed completado');
+  console.log('Admin: admin@fundecodes.org / admin123');
   console.log('Encargado: encargado@fundecodes.org / encargado123');
   console.log('Voluntario 1: voluntario1@fundecodes.org / voluntario123');
   console.log('Voluntario 2: voluntario2@fundecodes.org / voluntario123');
